@@ -112,11 +112,3 @@ Use at least **1.5 × to 2 × headroom** for frictional losses and transient loa
 | **Helical Motion** | Combine forward + sideways; keep lateral commands symmetric to prevent yaw drift. |
 
 ---
-
-## 6️⃣ Reference Images
-
-After uploading visuals, embed them as follows:
-
-```markdown
-![Active omni cutaway](images/wheel_cutaway.png)
-![Rack extension concept](images/rack_extension.png)
