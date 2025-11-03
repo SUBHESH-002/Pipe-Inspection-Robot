@@ -1,81 +1,122 @@
-# Mechanism Explanation — Active Omni PipeBot (2-Wheel Module + Rack Extension)
+# ⚙️ Mechanism Explanation — Active Omni PipeBot (2-Wheel Module with Rack Extension)
 
-This document explains the wheel unit inspired by the Ducati Upriser active omni (two motor inputs per wheel) and the rack-and-pinion that pushes both wheels outward to grip the pipe wall.
+This document describes the wheel module inspired by the **Ducati Upriser active omni system**.  
+Each wheel provides **two independent degrees of freedom (2-DOF)** through differential gearing, while a **rack-and-pinion** mechanism deploys both wheels outward to ensure stable wall contact inside a pipe.
 
-## 1) What the wheel really is
-Each wheel is a **2-DOF differential**:
-- **Hub motor (ωₕ)** spins the main hub → creates forward/backward motion.
-- **Central bevel gear motor (ω𝚌)** drives the eight 45° rollers via a bevel-gear train → creates sideways motion.
-- When ω𝚌 = ωₕ, rollers don’t spin relative to the hub → behaves like a normal wheel.
-- When the hub is held and ω𝚌 spins, rollers generate pure lateral thrust.
+---
 
-> In practice we use **two such wheels** placed left/right, separated by track **B**, and a **rack-extension** that sets the wall contact preload.
+## 1️⃣ Wheel Concept
 
-## 2) Why this works in a pipe
-- The pipe gives us a consistent, smooth contact surface with known inner diameter (ID).
-- The **rack** sets a normal force **N** at each wheel. With friction **μ**, two wheels can hold against gravity in vertical segments:
-  
-  \[
-  2 \mu N \ge m g \quad\Rightarrow\quad N \ge \frac{m g}{2 \mu}
-  \]
+Each wheel acts as a **two-motor differential drive**:
+- **Hub motor (ωₕ):** rotates the main wheel hub → produces forward or backward motion.
+- **Central bevel-gear motor (ω𝚌):** drives eight 45° rollers mounted on bevel gears → produces lateral motion.
 
-- By commanding wheel inputs, we can move **axially** (along pipe), **circumferentially** (around pipe), or **helically** (combo).
+**Modes of operation**
+- When **ω𝚌 = ωₕ**, there is no relative motion between hub and central gear → the wheel behaves as a **conventional wheel**.
+- When the hub is held still and **ω𝚌 ≠ 0**, the bevel train spins the rollers, creating **pure sideways (lateral) thrust**.
 
-## 3) Kinematic summary (per wheel → robot)
-Let:
-- \(R_h\) = main rolling radius,
-- \(r_r\) = roller radius,
-- \(\alpha \approx 45^\circ\) = roller axle angle,
-- \(G\) = central-to-roller gear ratio,
-- \(\kappa = G\,r_r \cos\alpha\).
+> The robot uses **two such wheels**, placed symmetrically left and right (track distance **B**) and mounted on a rack that controls wall-contact preload.
 
-**Single wheel surface velocities**
-- Axial component: \(v_x = R_h \,\omega_h\)
-- Lateral component: \(v_y = \kappa\,(\omega_c - \omega_h)\)
+---
 
-**Two-wheel body twist (track \(B\))**
+## 2️⃣ Operating Principle in a Pipe
+
+- The pipe’s inner wall provides a **consistent cylindrical surface** for traction.
+- A **rack-and-pinion** mechanism pushes both wheel carriages outward to maintain contact with the pipe wall.
+- Each wheel applies a normal force **N**, and with friction coefficient **μ**, two wheels can support the robot’s weight even in vertical orientation:
+
+\[
+2\mu N \geq mg \quad\Rightarrow\quad N \geq \frac{mg}{2\mu}
+\]
+
+- By commanding combinations of wheel inputs, the robot can move:
+  - **Axially** (along the pipe)
+  - **Circumferentially** (around the pipe)
+  - **Helically** (combined motion)
+
+---
+
+## 3️⃣ Kinematic Summary
+
+Define parameters:
+| Symbol | Meaning |
+|:--|:--|
+| \(R_h\) | Main wheel (hub) radius |
+| \(r_r\) | Roller radius |
+| \(\alpha\) | Roller axle angle (≈ 45°) |
+| \(G\) | Gear ratio between central and roller bevel gears |
+| \(\kappa = G\,r_r\cos\alpha\) | Effective lateral scaling constant |
+
+### Single-Wheel Surface Velocities
 \[
 \begin{aligned}
-v_x &= \frac{R_h}{2}(\omega_{h1} + \omega_{h2})\\
-v_y &= \frac{\kappa}{2}\big[(\omega_{c1}-\omega_{h1}) + (\omega_{c2}-\omega_{h2})\big]\\
+v_x &= R_h\,\omega_h \\
+v_y &= \kappa\,(\omega_c - \omega_h)
+\end{aligned}
+\]
+
+### Two-Wheel Body Twist (Track Distance \(B\))
+\[
+\begin{aligned}
+v_x &= \frac{R_h}{2}(\omega_{h1} + \omega_{h2}) \\
+v_y &= \frac{\kappa}{2}\big[(\omega_{c1}-\omega_{h1}) + (\omega_{c2}-\omega_{h2})\big] \\
 \omega_z &= \frac{R_h}{B}(\omega_{h2} - \omega_{h1})
 \end{aligned}
 \]
 
-This separation is useful: **hubs** control forward + yaw, while the **central bevels** add pure sideways without adding yaw (if applied symmetrically).
+- The **hub motors** control **forward motion and yaw**,  
+- The **central bevel motors** produce **pure lateral motion** (if symmetric).
 
-## 4) Rack-and-pinion preload
-- Target normal force per wheel \(N \ge \frac{m g}{2\mu}\) with 30–50% margin.
-- If pinion pitch radius is \(\rho_p\), required torque to set \(N\) (near-radial link):
-  \[
-  T_{\text{pinion}} \approx N\,\rho_p
-  \]
-  Non-radial arm at angle \(\beta\) needs \(F_{\text{rack}} \approx N/\cos\beta\).
+---
 
-**Drive torque per wheel for steady vertical climb**:
+## 4️⃣ Rack-and-Pinion Preload
+
+To ensure sufficient frictional grip:
+
 \[
-\tau_{\text{wheel}} \approx \frac{m g R_h}{2}
+N \ge \frac{mg}{2\mu}
 \]
-(Add 1.5–2× headroom for losses, joints, and transitions.)
 
-## 5) Control recipes (quick)
-- **Straight:** set \(\omega_{h1}=\omega_{h2}=v_x/R_h\), \(\omega_{c1}=\omega_{h1}\), \(\omega_{c2}=\omega_{h2}\).
-- **Sideways:** set \(\omega_{h1}=\omega_{h2}=0\), and \(\omega_{c1}=\omega_{c2}=v_y/\kappa\).
-- **Yaw in place:** set \(\omega_{h2}=-\omega_{h1}=(B\,\omega_z)/(2R_h)\); set \(\omega_{c1}=\omega_{h1}\), \(\omega_{c2}=\omega_{h2}\).
-- **Helix:** combine the above; keep sideways symmetric so yaw doesn’t drift.
+Add 30–50 % safety margin to account for pipe ovality and surface variation.
 
-## 6) Images
-Place reference images in `docs/images/` and link here:
-- `docs/images/wheel_cutaway.png` – bevel differential & rollers
-- `docs/images/rack_extension.png` – rack, pinion, and wheel carriages
+If the pinion driving the rack has pitch radius **ρₚ**,  
+the torque required per pinion is:
 
-> After you upload, embed them like:
->
-> `![Active omni cutaway](images/wheel_cutaway.png)`
->
-> `![Rack extension concept](images/rack_extension.png)`
+\[
+T_{\text{pinion}} = N\,\rho_p
+\]
 
-## 7) What to verify next (Stage 3 checklist)
-- Fusion Motion Study: **rack stroke vs. pipe ID**, contact clearances in bends.
-- Compute \(N, \tau_{\text{wheel}}, T_{\text{pinion}}\) using your \(m, \mu, R_h, \rho_p\).
-- Pick motors/ratios to deliver ≥1.5× torque targets.
+For non-radial arms at an angle **β**, the rack force increases:
+
+\[
+F_{\text{rack}} = \frac{N}{\cos\beta}
+\]
+
+**Drive torque for steady vertical climb:**
+
+\[
+\tau_{\text{wheel}} = \frac{mgR_h}{2}
+\]
+
+Use at least **1.5 × to 2 × headroom** for frictional losses and transient load changes.
+
+---
+
+## 5️⃣ Basic Motion Commands
+
+| Motion Type | Hub Motor Command | Central Motor Command |
+|--------------|------------------|------------------------|
+| **Straight** | \(\omega_{h1}=\omega_{h2}=v_x/R_h\) | \(\omega_{c1}=\omega_{h1},\; \omega_{c2}=\omega_{h2}\) |
+| **Sideways** | \(\omega_{h1}=\omega_{h2}=0\) | \(\omega_{c1}=\omega_{c2}=v_y/\kappa\) |
+| **Yaw in Place** | \(\omega_{h2}=-\omega_{h1}=\frac{B\,\omega_z}{2R_h}\) | \(\omega_{c1}=\omega_{h1},\; \omega_{c2}=\omega_{h2}\) |
+| **Helical Motion** | Combine forward + sideways; keep lateral commands symmetric to prevent yaw drift. |
+
+---
+
+## 6️⃣ Reference Images
+
+After uploading visuals, embed them as follows:
+
+```markdown
+![Active omni cutaway](images/wheel_cutaway.png)
+![Rack extension concept](images/rack_extension.png)
