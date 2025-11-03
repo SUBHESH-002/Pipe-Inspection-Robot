@@ -1,0 +1,21 @@
+Category,Item,Spec/Notes,Qty,Target Vendor/Link,Unit Cost (₹),Subtotal (₹),Status
+Structure,Main chassis & wheel carriages,3D-printed PLA/ABS,1,set by you,0,0,Planned
+Drive,Hub motors (x2),12V DC gearmotor, ≥180 rpm @ no-load, stall ≥0.15 N·m,2,Pololu/Local,0,0,To select
+Drive,Central bevel motors (x2),12V DC gearmotor, ≥300 rpm @ no-load, stall ≥0.10 N·m,2,Pololu/Local,0,0,To select
+Drive,Rack actuator motor,12V DC gearmotor or servo; must meet T_pinion target,1,Local,0,0,To select
+Drive,Pinion gear,Module/pitch matched to rack; ρp per calc,1,set by you,0,0,Printing/CNC
+Drive,Rack,Matched to pinion,1,set by you,0,0,Printing/CNC
+Transmission,Omni roller set (per wheel),8–10 rubberized rollers, 45° axles,2,Custom/Print TPU,0,0,Printing
+Electronics,Motor drivers TB6612FNG or BTS7960,4 DC channels + 1 rack channel min,3,Amazon/Robu,0,0,To select
+Electronics,Microcontroller,Arduino Mega or ESP32,1,Amazon,0,0,To select
+Electronics,IMU,MPU-6050/ICM-20948,1,Amazon,0,0,Planned
+Electronics,Encoders,Quadrature for hub & central motors,4,Local,0,0,To select
+Electronics,Power,battery 3S/4S Li-ion 18650 + BMS (≥30–50 Wh),1,Local,0,0,Planned
+Electronics,Power regulation,Step-down 12→5V (≥3A),1,Local,0,0,Planned
+Sensors,Camera,Wide FOV 120–150°, front mount,1,ESP32-CAM/USB,0,0,Planned
+Sensors,Gas sensor,MIKROE MQ-series or Industrial equivalent,1,Local,0,0,Planned
+Wiring,Connectors & cables,XT30/XT60, JST, dupont, assorted,1,Local,0,0,Planned
+Fasteners,Screws/nuts/heat inserts,M3/M4 assortment,1,Local,0,0,Planned
+Safety,Limit switches (rack ends),Lever microswitch,2,Local,0,0,Planned
+Misc,Grease & threadlocker,Light grease, Loctite 243,1,Local,0,0,Planned
+TOTAL,,,,,,,
